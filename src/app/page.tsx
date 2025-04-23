@@ -13,7 +13,7 @@ const COMMON_HEADERS = [
   { key: "X-Requested-With", value: "XMLHttpRequest" },
 ];
 
-// Complete list of HTTP headers for suggestions
+
 const ALL_HEADERS = [
   "Accept",
   "Accept-Charset",
@@ -57,7 +57,7 @@ const ALL_HEADERS = [
   "X-API-Key"
 ];
 
-// Common header values for suggestions
+
 const COMMON_HEADER_VALUES = {
   "Content-Type": [
     "application/json", 
@@ -84,7 +84,7 @@ const COMMON_HEADER_VALUES = {
   "Connection": ["keep-alive", "close"]
 };
 
-// Common API endpoints for suggestions
+
 const COMMON_ENDPOINTS = [
   "http://localhost:3000/api",
   "http://localhost:4000/api",
@@ -99,7 +99,7 @@ const COMMON_ENDPOINTS = [
   "https://api.github.com/repos",
 ];
 
-// Example JSON body templates
+
 const BODY_TEMPLATES = {
   login: {
     name: "Login Request",
@@ -147,7 +147,7 @@ export default function Home() {
   const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([]);
   const [showBodyTemplates, setShowBodyTemplates] = useState(false);
   
-  // For header suggestions
+ 
   const [activeHeaderIndex, setActiveHeaderIndex] = useState<number | null>(null);
   const [headerKeySuggestions, setHeaderKeySuggestions] = useState<string[]>([]);
   const [headerValueSuggestions, setHeaderValueSuggestions] = useState<string[]>([]);
@@ -168,7 +168,7 @@ export default function Home() {
       });
   }, [page, pageSize, response]);
 
-  // Handle outside click to close dropdowns
+  
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (urlSuggestionsRef.current && !urlSuggestionsRef.current.contains(event.target as Node) && 
@@ -176,11 +176,11 @@ export default function Home() {
         setShowUrlSuggestions(false);
       }
       
-      // Close header suggestions when clicking outside
+      
       if (showHeaderKeySuggestions || showHeaderValueSuggestions) {
         let isInsideHeaderInput = false;
         
-        // Check if click is inside any header input
+        
         headerKeyRefs.current.forEach((ref, idx) => {
           if (ref && ref.contains(event.target as Node)) {
             isInsideHeaderInput = true;
@@ -206,33 +206,33 @@ export default function Home() {
     };
   }, [showHeaderKeySuggestions, showHeaderValueSuggestions]);
   
-  // Handle header key input changes and show suggestions
+  
   const handleHeaderKeyChange = (index: number, value: string) => {
     updateHeaderKey(index, value);
     setActiveHeaderIndex(index);
     
-    // Always show suggestions when typing, even with empty string (shows all headers)
+    
     const suggestions = value.length > 0 
       ? ALL_HEADERS.filter(header => header.toLowerCase().includes(value.toLowerCase())).slice(0, 5)
       : ALL_HEADERS.slice(0, 5);
     
     setHeaderKeySuggestions(suggestions);
-    setShowHeaderKeySuggestions(true); // Always show suggestions when user is typing
+    setShowHeaderKeySuggestions(true); 
     setShowHeaderValueSuggestions(false);
   };
   
-  // Handle header value input changes and show suggestions
+  
   const handleHeaderValueChange = (index: number, value: string) => {
     updateHeaderValue(index, value);
     setActiveHeaderIndex(index);
     
     const headerKey = headerList[index].key.trim();
     
-    // Get common values for this header type
+    
     const commonValues = COMMON_HEADER_VALUES[headerKey as keyof typeof COMMON_HEADER_VALUES] || [];
     
     if (commonValues.length > 0) {
-      // Always show suggestions when a recognized header is being edited
+      
       const suggestions = value.length > 0
         ? commonValues.filter(val => val.toLowerCase().includes(value.toLowerCase()))
         : commonValues;
@@ -245,24 +245,24 @@ export default function Home() {
     }
   };
   
-  // Select a header key suggestion
+  
   const selectHeaderKeySuggestion = (suggestion: string) => {
     if (activeHeaderIndex !== null) {
-      // Directly update the headerList state with the new key value
+      
       const newList = [...headerList];
       newList[activeHeaderIndex].key = suggestion;
       setHeaderList(newList);
       
       setShowHeaderKeySuggestions(false);
       
-      // Focus the value input after selecting a key
+      
       setTimeout(() => {
         if (headerValueRefs.current[activeHeaderIndex]) {
           headerValueRefs.current[activeHeaderIndex]?.focus();
         }
       }, 50);
       
-      // Check if we have common values for this header
+      
       if (COMMON_HEADER_VALUES[suggestion as keyof typeof COMMON_HEADER_VALUES]) {
         setHeaderValueSuggestions(COMMON_HEADER_VALUES[suggestion as keyof typeof COMMON_HEADER_VALUES]);
         setShowHeaderValueSuggestions(true);
@@ -270,39 +270,39 @@ export default function Home() {
     }
   };
   
-  // Select a header value suggestion
+  
   const selectHeaderValueSuggestion = (suggestion: string) => {
     if (activeHeaderIndex !== null) {
-      // Directly update the headerList state with the new value
+      
       const newList = [...headerList];
       newList[activeHeaderIndex].value = suggestion;
       setHeaderList(newList);
       
       setShowHeaderValueSuggestions(false);
       
-      // Add a new empty header row if this is the last one
+      
       if (activeHeaderIndex === headerList.length - 1) {
         addHeader();
       }
     }
   };
 
-  // Generate URL suggestions based on input
+  
   const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
     setUrl(input);
     
     if (input.length > 0) {
-      // Combine history URLs and common endpoints for suggestions
+      
       const historyUrls = history.map(h => h.url);
       const allSuggestions = [...new Set([...COMMON_ENDPOINTS, ...historyUrls])];
       
-      // Filter suggestions based on input
+      
       const filtered = allSuggestions.filter(
         suggestion => suggestion.toLowerCase().includes(input.toLowerCase())
       );
       
-      setFilteredSuggestions(filtered.slice(0, 8)); // Limit to 8 suggestions
+      setFilteredSuggestions(filtered.slice(0, 8)); 
       setShowUrlSuggestions(filtered.length > 0);
     } else {
       setShowUrlSuggestions(false);
@@ -313,7 +313,7 @@ export default function Home() {
     setUrl(suggestion);
     setShowUrlSuggestions(false);
     
-    // Auto-suggest appropriate body template based on URL path
+    
     if (suggestion.includes('/login')) {
       suggestBodyTemplate('login');
     } else if (suggestion.includes('/register')) {
@@ -328,7 +328,7 @@ export default function Home() {
       const template = BODY_TEMPLATES[templateKey];
       setBody(JSON.stringify(template.body, null, 2));
       
-      // Add Content-Type header if not present
+     
       if (!headerList.some(h => h.key.toLowerCase() === 'content-type')) {
         addHeader('Content-Type', 'application/json');
       }
