@@ -9,19 +9,26 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@mikro-orm/core": "^6.4.13",
+    "@mikro-orm/postgresql": "^6.4.13",
+    "@mikro-orm/reflection": "^6.4.13",
+    "next": "15.3.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "next": "15.3.1"
+    "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@eslint/eslintrc": "^3",
+    "@mikro-orm/cli": "^6.4.13",
+    "@mikro-orm/migrations": "^6.4.13",
+    "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@tailwindcss/postcss": "^4",
-    "tailwindcss": "^4",
     "eslint": "^9",
     "eslint-config-next": "15.3.1",
-    "@eslint/eslintrc": "^3"
+    "tailwindcss": "^4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5"
   }
 }

@@ -21,6 +21,14 @@
 
 body {
   background: var(--background);
+  background-image: linear-gradient(to bottom right, #e0f2fe, #e0e7ff);
+  background-attachment: fixed;
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-image: linear-gradient(to bottom right, #111827, #374151);
+  }
 }
